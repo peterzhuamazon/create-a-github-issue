@@ -1,6 +1,7 @@
 <h3 align="center">Create an Issue Action</h3>
 <p align="center">A GitHub Action that creates a new issue using a template file.<p>
 <p align="center"><a href="https://github.com/JasonEtco/create-an-issue"><img alt="GitHub Actions status" src="https://github.com/JasonEtco/create-an-issue/workflows/Node%20CI/badge.svg"></a> <a href="https://codecov.io/gh/JasonEtco/create-an-issue/"><img src="https://badgen.now.sh/codecov/c/github/JasonEtco/create-an-issue" alt="Codecov"></a></p>
+<p align="center">This is a maintained fork for [JasonEtco/create-an-issue](https://github.com/JasonEtco/create-an-issue).<p>
 
 ## Usage
 
