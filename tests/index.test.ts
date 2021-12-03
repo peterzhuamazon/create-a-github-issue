@@ -27,7 +27,7 @@ function generateToolkit() {
   return tools
 }
 
-describe('create-an-issue', () => {
+describe('create-a-github-issue', () => {
   let tools: Toolkit
   let params: any
 

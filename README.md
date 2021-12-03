@@ -1,7 +1,17 @@
 <h3 align="center">Create an Issue Action</h3>
 <p align="center">A GitHub Action that creates a new issue using a template file.<p>
-<p align="center"><a href="https://github.com/JasonEtco/create-an-issue"><img alt="GitHub Actions status" src="https://github.com/JasonEtco/create-an-issue/workflows/Node%20CI/badge.svg"></a> <a href="https://codecov.io/gh/JasonEtco/create-an-issue/"><img src="https://badgen.now.sh/codecov/c/github/JasonEtco/create-an-issue" alt="Codecov"></a></p>
-<p align="center">This is a maintained fork for [JasonEtco/create-an-issue](https://github.com/JasonEtco/create-an-issue).<p>
+<p align="center"><a href="https://github.com/dblock/create-a-github-issue"><img alt="GitHub Actions status" src="https://github.com/dblock/create-a-github-issue/workflows/Node%20CI/badge.svg"></a> <a href="https://codecov.io/gh/dblock/create-a-github-issue/"><img src="https://badgen.now.sh/codecov/c/github/dblock/create-a-github-issue" alt="Codecov"></a></p>
+
+- [Fork](#fork)
+- [Usage](#usage)
+  - [Dates](#dates)
+  - [Custom templates](#custom-templates)
+  - [Inputs](#inputs)
+  - [Outputs](#outputs)
+
+## Fork
+
+This is a maintained fork of [JasonEtco/create-an-issue](https://github.com/JasonEtco/create-an-issue). See [CHANGELOG](CHANGELOG.md) for fixes and features.
 
 ## Usage
 
@@ -19,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: JasonEtco/create-an-issue@v2
+      - uses: dblock/create-a-github-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -38,7 +48,7 @@ Someone just pushed, oh no! Here's who did it: {{ payload.sender.login }}.
 You'll notice that the above example has some `{{ mustache }}` variables. Your issue templates have access to several things about the event that triggered the action. Besides `issue` and `pullRequest`, you have access to all the template variables [on this list](https://github.com/JasonEtco/actions-toolkit#toolscontext). You can also use environment variables:
 
 ```yaml
-- uses: JasonEtco/create-an-issue@v2
+- uses: dblock/create-a-github-issue@v2
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     ADJECTIVE: great
@@ -70,7 +80,7 @@ Don't want to use `.github/ISSUE_TEMPLATE.md`? You can pass an input pointing th
 ```yaml
 steps:
   - uses: actions/checkout@v2
-  - uses: JasonEtco/create-an-issue@v2
+  - uses: dblock/create-a-github-issue@v2
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
@@ -84,7 +94,7 @@ Want to use Action logic to determine who to assign the issue to, to assign a mi
 ```yaml
 steps:
   - uses: actions/checkout@v2
-  - uses: JasonEtco/create-an-issue@v2
+  - uses: dblock/create-a-github-issue@v2
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
@@ -104,7 +114,7 @@ If you need the number or URL of the issue that was created or updated for anoth
 
 ```yaml
 steps:
-  - uses: JasonEtco/create-an-issue@v2
+  - uses: dblock/create-a-github-issue@v2
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     id: create-issue
