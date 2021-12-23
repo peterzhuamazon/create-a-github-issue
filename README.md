@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: dblock/create-a-github-issue@v3.0
+      - uses: dblock/create-a-github-issue@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -48,7 +48,7 @@ Someone just pushed, oh no! Here's who did it: {{ payload.sender.login }}.
 You'll notice that the above example has some `{{ mustache }}` variables. Your issue templates have access to several things about the event that triggered the action. Besides `issue` and `pullRequest`, you have access to all the template variables [on this list](https://github.com/JasonEtco/actions-toolkit#toolscontext). You can also use environment variables:
 
 ```yaml
-- uses: dblock/create-a-github-issue@v3.0
+- uses: dblock/create-a-github-issue@v3
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     ADJECTIVE: great
@@ -80,7 +80,7 @@ Don't want to use `.github/ISSUE_TEMPLATE.md`? You can pass an input pointing th
 ```yaml
 steps:
   - uses: actions/checkout@v2
-  - uses: dblock/create-a-github-issue@v3.0
+  - uses: dblock/create-a-github-issue@v3
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
@@ -94,7 +94,7 @@ Want to use Action logic to determine who to assign the issue to, to assign a mi
 ```yaml
 steps:
   - uses: actions/checkout@v2
-  - uses: dblock/create-a-github-issue@v3.0
+  - uses: dblock/create-a-github-issue@v3
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
@@ -114,7 +114,7 @@ If you need the number or URL of the issue that was created or updated for anoth
 
 ```yaml
 steps:
-  - uses: dblock/create-a-github-issue@v3.0
+  - uses: dblock/create-a-github-issue@v3
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     id: create-issue
