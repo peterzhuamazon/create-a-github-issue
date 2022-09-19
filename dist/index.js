@@ -33017,8 +33017,7 @@ async function createAnIssue(tools) {
     const template = tools.inputs.filename || '.github/ISSUE_TEMPLATE.md';
     const assignees = tools.inputs.assignees;
     const searchExistingType = tools.inputs.search_existing || 'open';
-    console.log(searchExistingType);
-    if (!['open', 'closed', 'all'].includes(searchExistingType)) {
+    if (!['open', 'closed', 'all'].includes(searchExistingType.replace(/\s/g, ""))) {
         tools.exit.failure(`Invalid value search_existing=${tools.inputs.search_existing}, must be one of open, closed or all`);
     }
     let updateExisting = null;
