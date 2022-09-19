@@ -33016,8 +33016,10 @@ function logError(tools, template, action, err) {
 async function createAnIssue(tools) {
     const template = tools.inputs.filename || '.github/ISSUE_TEMPLATE.md';
     const assignees = tools.inputs.assignees;
-    const searchExistingType = tools.inputs.search_existing || 'open';
-    if (!['open', 'closed', 'all'].includes(searchExistingType.replace(/\s/g, ""))) {
+    const searchExistingTypeStr = tools.inputs.search_existing || 'open';
+    const searchExistingType = searchExistingTypeStr.replace(/\s/g, "").split(",");
+    const searchExistingTypeTarget = ['open', 'closed', 'all'];
+    if (!searchExistingType.every(type => searchExistingTypeTarget.includes(type))) {
         tools.exit.failure(`Invalid value search_existing=${tools.inputs.search_existing}, must be one of open, closed or all`);
     }
     let updateExisting = null;
@@ -33053,35 +33055,37 @@ async function createAnIssue(tools) {
     };
     tools.log.debug('Templates compiled', templated);
     if (updateExisting !== null) {
-        tools.log.info(`Fetching ${searchExistingType} issues with title "${templated.title}"`);
-        const searchExistingQuery = (searchExistingType === 'all') ? '' : `is:${searchExistingType} `;
-        const existingIssues = await tools.github.search.issuesAndPullRequests({
-            q: `${searchExistingQuery}is:issue repo:${process.env.GITHUB_REPOSITORY} in:title ${templated.title}`
-        });
-        const existingIssue = existingIssues.data.items.find(issue => issue.title === templated.title);
-        if (existingIssue) {
-            if (updateExisting === false) {
-                (0, helpers_1.setOutputs)(tools, existingIssue, 'found');
-                tools.exit.success(`Existing issue ${existingIssue.title}#${existingIssue.number}: ${existingIssue.html_url} found but not updated`);
+        for (let i = 0; i < searchExistingType.length; i++) {
+            tools.log.info(`Fetching ${searchExistingType[i]} issues with title "${templated.title}"`);
+            const searchExistingQuery = (searchExistingType[i] === 'all') ? '' : `is:${searchExistingType[i]} `;
+            const existingIssues = await tools.github.search.issuesAndPullRequests({
+                q: `${searchExistingQuery}is:issue repo:${process.env.GITHUB_REPOSITORY} in:title ${templated.title}`
+            });
+            const existingIssue = existingIssues.data.items.find(issue => issue.title === templated.title);
+            if (existingIssue) {
+                if (updateExisting === false) {
+                    (0, helpers_1.setOutputs)(tools, existingIssue, 'found');
+                    tools.exit.success(`Existing issue ${existingIssue.title}#${existingIssue.number}: ${existingIssue.html_url} found but not updated`);
+                }
+                else {
+                    try {
+                        tools.log.info(`Updating existing issue ${existingIssue.title}#${existingIssue.number}: ${existingIssue.html_url}`);
+                        const issue = await tools.github.issues.update({
+                            ...tools.context.repo,
+                            issue_number: existingIssue.number,
+                            body: templated.body
+                        });
+                        (0, helpers_1.setOutputs)(tools, existingIssue, 'updated');
+                        tools.exit.success(`Updated issue ${existingIssue.title}#${existingIssue.number}: ${existingIssue.html_url}`);
+                    }
+                    catch (err) {
+                        return logError(tools, template, 'updating', err);
+                    }
+                }
             }
             else {
-                try {
-                    tools.log.info(`Updating existing issue ${existingIssue.title}#${existingIssue.number}: ${existingIssue.html_url}`);
-                    const issue = await tools.github.issues.update({
-                        ...tools.context.repo,
-                        issue_number: existingIssue.number,
-                        body: templated.body
-                    });
-                    (0, helpers_1.setOutputs)(tools, existingIssue, 'updated');
-                    tools.exit.success(`Updated issue ${existingIssue.title}#${existingIssue.number}: ${existingIssue.html_url}`);
-                }
-                catch (err) {
-                    return logError(tools, template, 'updating', err);
-                }
+                tools.log.info('No existing issue found to update');
             }
-        }
-        else {
-            tools.log.info('No existing issue found to update');
         }
     }
     // Create the new issue
